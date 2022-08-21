@@ -44,21 +44,9 @@ public class Game extends Canvas implements KeyListener{
 	public Game(Dimension dim) {
 		buffer = new BufferedImage(dim.width, dim.height, BufferedImage.TYPE_INT_RGB);
 		this.setIgnoreRepaint(true); // Ignore repainting as we are doing all
-		ball = new Ball(dim.width , dim.height, 0, 0, 10, 10, 1);
+		ball = new Ball(dim.width , dim.height, 200, 500, 10, 10, 1);
 		bat = new Bat(dim.width , dim.height, (dim.width -100)/2, 500, 100, 10, 1);
-		brick = new Brick(3,7);
-		
-//		try {
-//			bg = ImageIO.read(new File("./img/bg.jpg"));
-//			ballImg = ImageIO.read(new File("./img/ball.png"));
-//			batImg = ImageIO.read(new File("./img/bat.png"));
-//			brickImg = ImageIO.read(new File("./img/brick.png"));
-//		}
-//		catch(IOException e) {
-//			e.printStackTrace();
-//		}
-//		this.setIgnoreRepaint(true);
-		
+		brick = new Brick(3,7);		
 	}
 	
 	/**
@@ -92,8 +80,14 @@ public class Game extends Canvas implements KeyListener{
 	public void detectCollision() {
 		Rectangle rectBall = new Rectangle(ball.getX(), ball.getY(), ball.getW(), ball.getH());
 		Rectangle rectBat = new Rectangle(bat.getX(), bat.getY(), bat.getW(), bat.getH());
+		//Temporary values
+		Rectangle rectBrick = new Rectangle(0, 0, brick.getW(), brick.getH());
 		
 		if(rectBall.intersects(rectBat)) {
+			ball.reverse();
+		}
+		if(rectBall.intersects(rectBrick)) {
+			brick.destroy();
 			ball.reverse();
 		}
 	}
@@ -113,14 +107,13 @@ public class Game extends Canvas implements KeyListener{
 //		b.fillRect(0, 10, 10, buffer.getHeight()-10);
 //		b.fillRect(buffer.getWidth()-10, 10, 10, buffer.getHeight()-10);
 		
+		//Brick
+		brick.draw((Graphics2D)b);	
+		
 		//Baller color and Bat color
 		b.setColor(Color.WHITE);
 		b.fillOval(ball.getX(), ball.getY(), ball.getW(), ball.getH());		
 		b.fillRect(bat.getX(), bat.getY(), bat.getW(), bat.getH());
-		
-		//Brick
-		brick.draw((Graphics2D)b);
-		
 	}
 
 	/**
