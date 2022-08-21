@@ -17,7 +17,7 @@ public class Bat extends GameEntity{
 		x = x + dx;
 		
 		if(x <= 0) {
-			x =0 ;
+			x = 0 ;
 		}
 		if(x >= gameW - w) {
 			x = gameW - w;
