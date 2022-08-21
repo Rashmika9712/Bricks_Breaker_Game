@@ -1,3 +1,4 @@
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
@@ -15,17 +16,16 @@ public class Brick{
 			}			
 		}
 		
-		this.brickW = 400/col;
-		this.brickH = 80/row;
-		
+		this.brickW = 370/col;
+		this.brickH = 100/row;		
 	}
 	
-	public int getWidth() {
-		return brickW;
+	public int getW() {
+		return this.brickW;
 	}
 	
-	public int getHeight() {
-		return brickH;
+	public int getH() {
+		return this.brickH;
 	}
 	
 	public void setBrick(int value, int row, int col) {
@@ -37,9 +37,17 @@ public class Brick{
 			for(int j=0; j<map[0].length;j++) {
 				if(map[i][j]>0) {
 					g.setColor(Color.GREEN);
-					g.fillRect(j*this.brickW, i*this.brickH, this.brickW, this.brickH);
+					g.fillRect(j*this.brickW + 15, i*this.brickH + 15, this.brickW, this.brickH);
+					
+					g.setColor(Color.BLACK);
+					g.setStroke(new BasicStroke(13));
+					g.drawRect(j*this.brickW + 15, i*this.brickH + 15, this.brickW, this.brickH);
 				}
 			}
 		}
+	}
+	
+	public void destroy() {
+		System.out.println("Brick was destroyed");
 	}
 }
