@@ -1,28 +1,15 @@
-public class Brick{
-	private int brickW;
-	private int brickH;
-	private int map[][]; 
+public class Brick extends GameEntity{
 	
-	public Brick(int row, int col) {
-		map = new int[row][col];
-		
-		for (int i = 0; i < row; i++) {
-			for (int j = 0; j < col; j++) {
-				map[i][j] = 1;
-			}			
-		}
-		
-		this.brickW = 400/col;
-		this.brickH = 80/row;
-		
+	public Brick(int gameW, int gameH, int startX, int startY, int w, int h, int speed) {
+		super(gameW, gameH, startX, startY, w, h, speed);
+		// TODO Auto-generated method stub
 	}
-	
-	public int getWidth() {
-		return brickW;
-	}
-	
-	public int getHeight() {
-		return brickH;
+
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
 	}	
+		
 	
 }

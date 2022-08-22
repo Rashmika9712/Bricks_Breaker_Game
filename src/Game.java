@@ -24,10 +24,12 @@ public class Game extends Canvas implements KeyListener{
 	Ball ball;
 	Bat bat;
 	Brick brick;
-	BufferedImage bg;
-	BufferedImage ballImg;
-	BufferedImage batImg;
-	BufferedImage brickImg;
+//	BufferedImage bg;
+//	BufferedImage ballImg;
+//	BufferedImage batImg;
+//	BufferedImage brickImg;
+	
+	private int totalBrics = 21;
 	
 	boolean isLeft;
 	boolean isRight;
@@ -40,8 +42,7 @@ public class Game extends Canvas implements KeyListener{
 		this.setIgnoreRepaint(true); // Ignore repainting as we are doing all
 		ball = new Ball(dim.width , dim.height, 0, 0, 10, 10, 1);
 		bat = new Bat(dim.width , dim.height, (dim.width -100)/2, 500, 100, 10, 1);
-		brick = new Brick(3,7);		
-
+		
 	}
 	
 	/**
