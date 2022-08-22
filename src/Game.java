@@ -35,6 +35,8 @@ public class Game extends Canvas implements KeyListener{
 	BufferedImage batImg;
 	BufferedImage brickImg;
 	
+	private int totalBricks =21;
+	
 	boolean isLeft;
 	boolean isRight;
 
@@ -80,16 +82,32 @@ public class Game extends Canvas implements KeyListener{
 	public void detectCollision() {
 		Rectangle rectBall = new Rectangle(ball.getX(), ball.getY(), ball.getW(), ball.getH());
 		Rectangle rectBat = new Rectangle(bat.getX(), bat.getY(), bat.getW(), bat.getH());
-		//Temporary values
-		Rectangle rectBrick = new Rectangle(0, 0, brick.getW(), brick.getH());
-		
+				
 		if(rectBall.intersects(rectBat)) {
 			ball.reverse();
 		}
-		if(rectBall.intersects(rectBrick)) {
-			brick.destroy();
-			ball.reverse();
+		
+		A: for (int i =0; i<brick.map.length; i++) {
+			for(int j = 0; j<brick.map[0].length; j++) {
+				if(brick.map[i][j] > 0) {
+					brick.setX(j* brick.getW());
+					brick.setY(i* brick.getH());
+					
+					Rectangle rect = new Rectangle(brick.getX() , brick.getY(), brick.getW(), brick.getH());
+					Rectangle ballRect = new Rectangle(ball.getX(), ball.getY(), 20, 20);
+					Rectangle brickRect = rect;
+					
+					if(ballRect.intersects(brickRect)) {	
+						ball.reverse();
+						brick.setBrickValue(0, i, j);
+						totalBricks--;
+						
+						break A;
+					}
+				}
+			}
 		}
+		
 	}
 
 	/**

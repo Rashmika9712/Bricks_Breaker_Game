@@ -1,11 +1,14 @@
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 
 public class Brick{
+	private int x;
+	private int y;
 	private int brickW;
 	private int brickH;
-	private int map[][]; 
+	public int map[][]; 
 	
 	public Brick(int row, int col) {
 		map = new int[row][col];
@@ -18,18 +21,6 @@ public class Brick{
 		
 		this.brickW = 370/col;
 		this.brickH = 100/row;		
-	}
-	
-	public int getW() {
-		return this.brickW;
-	}
-	
-	public int getH() {
-		return this.brickH;
-	}
-	
-	public void setBrick(int value, int row, int col) {
-		map[row][col] = value;
 	}
 	
 	public void draw(Graphics2D g) {
@@ -47,7 +38,29 @@ public class Brick{
 		}
 	}
 	
-	public void destroy() {
-		System.out.println("Brick was destroyed");
+	public void setBrickValue(int value, int row, int col) {
+		map[row][col] = value;
+	}
+	
+	public int getW() {
+		return this.brickW;
+	}
+	
+	public int getH() {
+		return this.brickH;
+	}
+	public int getX() {
+		return this.x;
+	}
+	public int getY() {
+		return this.y;
+	}	
+	
+	public void setX(int x) {
+		this.x = x;
+	}
+	
+	public void setY(int y) {
+		this.y = y;
 	}
 }
