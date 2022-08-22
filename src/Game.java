@@ -15,12 +15,6 @@ import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
-import java.awt.Graphics2D;
 
 public class Game extends Canvas implements KeyListener{
 
@@ -46,19 +40,8 @@ public class Game extends Canvas implements KeyListener{
 		this.setIgnoreRepaint(true); // Ignore repainting as we are doing all
 		ball = new Ball(dim.width , dim.height, 0, 0, 10, 10, 1);
 		bat = new Bat(dim.width , dim.height, (dim.width -100)/2, 500, 100, 10, 1);
-		brick = new Brick(3,7);
-		
-//		try {
-//			bg = ImageIO.read(new File("./img/bg.jpg"));
-//			ballImg = ImageIO.read(new File("./img/ball.png"));
-//			batImg = ImageIO.read(new File("./img/bat.png"));
-//			brickImg = ImageIO.read(new File("./img/brick.png"));
-//		}
-//		catch(IOException e) {
-//			e.printStackTrace();
-//		}
-//		this.setIgnoreRepaint(true);
-		
+		brick = new Brick(3,7);		
+
 	}
 	
 	/**
@@ -107,20 +90,13 @@ public class Game extends Canvas implements KeyListener{
 		b.setColor(Color.BLACK);
 		b.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());		
 		
-		//border
-//		b.setColor(Color.BLUE);
-//		b.fillRect(0, 0, buffer.getWidth(), 10);
-//		b.fillRect(0, 10, 10, buffer.getHeight()-10);
-//		b.fillRect(buffer.getWidth()-10, 10, 10, buffer.getHeight()-10);
+		
 		
 		//Baller color and Bat color
 		b.setColor(Color.WHITE);
 		b.fillOval(ball.getX(), ball.getY(), ball.getW(), ball.getH());		
 		b.fillRect(bat.getX(), bat.getY(), bat.getW(), bat.getH());
-		
-		//Brick
-		brick.draw((Graphics2D)b);
-		
+				
 	}
 
 	/**
