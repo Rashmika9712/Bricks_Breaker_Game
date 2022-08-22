@@ -1,5 +1,13 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.io.File;
+import java.io.IOException;
 
-public class Ball extends GameEntity{		
+import javax.imageio.ImageIO;
+
+public class Ball extends GameEntity implements Draw{		
 	
 	private int dy;
 	
@@ -33,5 +41,18 @@ public class Ball extends GameEntity{
 	public void reverse()
 	{
 		dy = -speed;
+	}
+
+	@Override
+	public void drawObject(Graphics2D g, ImageObserver observer) {
+		// TODO Auto-generated method stub
+		try {
+			BufferedImage buffer = ImageIO.read(new File("./img/ball.png"));
+			g.drawImage(buffer, x, y, observer);
+		} catch (IOException e) {
+			g.setColor(Color.WHITE);
+			g.fillOval(getX(), getY(), getW(), getH());
+			e.printStackTrace();
+		}
 	}
 }

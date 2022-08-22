@@ -1,3 +1,5 @@
+import java.awt.Graphics2D;
+import java.awt.image.ImageObserver;
 
 public abstract class GameEntity {
 	protected int x;
@@ -20,8 +22,8 @@ public abstract class GameEntity {
 		this.speed = speed;
 	}
 
-	public abstract void update();
-	
+	public abstract void update();	
+		
 	public int getX() {
 		return x;
 	}

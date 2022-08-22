@@ -15,6 +15,13 @@ import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.imageio.ImageIO;
 
 public class Game extends Canvas implements KeyListener{
 
@@ -29,20 +36,38 @@ public class Game extends Canvas implements KeyListener{
 //	BufferedImage batImg;
 //	BufferedImage brickImg;
 	
-	private int totalBrics = 21;
+	private int totalBrics = 20;
+	private int brickW = 38;
+	private int brickH = 18;
+	private int brickS = 11;
+	List<GameEntity> gEntity;
 	
 	boolean isLeft;
 	boolean isRight;
-
+	boolean isReversed;
 	/**
 	 * Create the game using the width and the height specified
 	 */
 	public Game(Dimension dim) {
 		buffer = new BufferedImage(dim.width, dim.height, BufferedImage.TYPE_INT_RGB);
 		this.setIgnoreRepaint(true); // Ignore repainting as we are doing all
-		ball = new Ball(dim.width , dim.height, 0, 0, 10, 10, 1);
+		ball = new Ball(dim.width , dim.height, 150, 450, 10, 10, 1);
 		bat = new Bat(dim.width , dim.height, (dim.width -100)/2, 500, 100, 10, 1);
 		
+		int brickX = brickS + 2;
+		int brickY = brickS + 2;
+		gEntity = new ArrayList<>();
+		for(int i = 0; i < totalBrics; i++) {
+			gEntity.add(new Brick(dim.width , dim.height, brickX, brickY, brickW, brickH, 0));
+			if(brickX + brickW > dim.width - brickS + 2) {
+				brickY += brickH;
+				brickX = brickS +2;
+			}
+			else {
+				brickX += brickW;
+			}
+		}		
+		gEntity.addAll(Arrays.asList(ball,bat));
 	}
 	
 	/**
@@ -56,8 +81,8 @@ public class Game extends Canvas implements KeyListener{
 			if (this.isRight) bat.setRight();
 			
 			//Logic
-			ball.update();				
-			bat.update();			
+			for (GameEntity e : gEntity)
+				e.update();			
 			
 			detectCollision();
 			// Draw the buffer
@@ -74,11 +99,36 @@ public class Game extends Canvas implements KeyListener{
 	}	
 	
 	public void detectCollision() {
-		Rectangle rectBall = new Rectangle(ball.getX(), ball.getY(), ball.getW(), ball.getH());
-		Rectangle rectBat = new Rectangle(bat.getX(), bat.getY(), bat.getW(), bat.getH());
+		List<Brick> destroy = new ArrayList<>();
+		gEntity.stream().filter(entity-> entity instanceof Ball).forEach(ball -> {
+			Rectangle rectBall = new Rectangle(ball.getX(), ball.getY(), ball.getW(), ball.getH());
 		
-		if(rectBall.intersects(rectBat)) {
-			ball.reverse();
+			//Bat collision
+			gEntity.stream().filter(entity -> entity instanceof Bat).forEach(bat -> {
+				Rectangle rectBat = new Rectangle(bat.getX(), bat.getY(), bat.getW(), bat.getH());
+			
+				if(rectBall.intersects(rectBat)) {
+					((Ball)ball).reverse();
+				}
+			});
+			
+			//Brick Collision			
+			gEntity.stream().filter(entity -> entity instanceof Brick).forEach(brick -> {
+				Rectangle rectBrick = new Rectangle(brick.getX(), brick.getY(), brick.getW(), brick.getH());
+
+				if (rectBall.intersects(rectBrick)) {
+					if (!isReversed) {
+						((Ball) ball).reverse();
+						isReversed = true;
+					}
+					destroy.add((Brick) brick);
+				}
+			});
+			
+		});	
+		isReversed = false;
+		for (Brick b : destroy) {
+			gEntity.remove(b);			
 		}
 	}
 
@@ -87,17 +137,34 @@ public class Game extends Canvas implements KeyListener{
 	 */
 	public void drawBuffer() {
 		Graphics2D b = buffer.createGraphics();
+		BufferedImage image;
 		// Black color background
-		b.setColor(Color.BLACK);
-		b.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());		
+//		b.setColor(Color.BLACK);
+//		b.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());	
+//		
+		try {
+			image = ImageIO.read(new File("./img/bg.png"));
+			b.drawImage(image, 0, 0, this);
+		} catch (IOException e) {
+
+			// Black color background
+			b.setColor(Color.BLACK);
+			b.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
+			e.printStackTrace();
+		}
 		
 		
 		
 		//Baller color and Bat color
 		b.setColor(Color.WHITE);
-		b.fillOval(ball.getX(), ball.getY(), ball.getW(), ball.getH());		
+		//b.fillOval(ball.getX(), ball.getY(), ball.getW(), ball.getH());		
 		b.fillRect(bat.getX(), bat.getY(), bat.getW(), bat.getH());
-				
+		
+		gEntity.stream().filter(entity -> entity instanceof Draw).forEach(entity -> {
+			((Draw) entity).drawObject(b, this);
+		});
+
+		
 	}
 
 	/**
