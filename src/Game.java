@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 public class Game extends Canvas implements KeyListener{
 
@@ -31,37 +32,41 @@ public class Game extends Canvas implements KeyListener{
 	Ball ball;
 	Bat bat;
 	Brick brick;
-//	BufferedImage bg;
-//	BufferedImage ballImg;
-//	BufferedImage batImg;
-//	BufferedImage brickImg;
 	
-	private int totalBrics = 20;
+	private int totalBriks = 20;
+	private int score = 0 ;
 	private int brickW = 38;
-	private int brickH = 18;
-	private int brickS = 11;
+	private int brickH = 25;
+	public static int brickS = 20;
 	List<GameEntity> gEntity;
+	private Dimension dim;
 	
 	boolean isLeft;
 	boolean isRight;
 	boolean isReversed;
+	
 	/**
 	 * Create the game using the width and the height specified
 	 */
 	public Game(Dimension dim) {
+		this.dim = dim;
+		newGame();
+	}
+	
+	public void newGame() {
 		buffer = new BufferedImage(dim.width, dim.height, BufferedImage.TYPE_INT_RGB);
 		this.setIgnoreRepaint(true); // Ignore repainting as we are doing all
-		ball = new Ball(dim.width , dim.height, 150, 450, 10, 10, 1);
-		bat = new Bat(dim.width , dim.height, (dim.width -100)/2, 500, 100, 10, 1);
+		ball = new Ball(dim.width , dim.height, 150, 450, 30, 30, 3);
+		bat = new Bat(dim.width , dim.height, (dim.width -100)/2, 500, 110, 1, 4);
 		
 		int brickX = brickS + 2;
 		int brickY = brickS + 2;
 		gEntity = new ArrayList<>();
-		for(int i = 0; i < totalBrics; i++) {
+		for(int i = 0; i < totalBriks; i++) {
 			gEntity.add(new Brick(dim.width , dim.height, brickX, brickY, brickW, brickH, 0));
 			if(brickX + brickW > dim.width - brickS + 2) {
 				brickY += brickH;
-				brickX = brickS +2;
+				brickX = brickS + 5;
 			}
 			else {
 				brickX += brickW;
@@ -123,12 +128,12 @@ public class Game extends Canvas implements KeyListener{
 					}
 					destroy.add((Brick) brick);
 				}
-			});
-			
+			});			
 		});	
 		isReversed = false;
 		for (Brick b : destroy) {
-			gEntity.remove(b);			
+			gEntity.remove(b);	
+			score++;
 		}
 	}
 
@@ -138,10 +143,8 @@ public class Game extends Canvas implements KeyListener{
 	public void drawBuffer() {
 		Graphics2D b = buffer.createGraphics();
 		BufferedImage image;
+		
 		// Black color background
-//		b.setColor(Color.BLACK);
-//		b.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());	
-//		
 		try {
 			image = ImageIO.read(new File("./img/bg.png"));
 			b.drawImage(image, 0, 0, this);
@@ -152,9 +155,7 @@ public class Game extends Canvas implements KeyListener{
 			b.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
 			e.printStackTrace();
 		}
-		
-		
-		
+				
 		//Baller color and Bat color
 		b.setColor(Color.WHITE);
 		//b.fillOval(ball.getX(), ball.getY(), ball.getW(), ball.getH());		
@@ -162,9 +163,34 @@ public class Game extends Canvas implements KeyListener{
 		
 		gEntity.stream().filter(entity -> entity instanceof Draw).forEach(entity -> {
 			((Draw) entity).drawObject(b, this);
-		});
-
+		});	
 		
+		//Ball drop
+		gEntity.stream().filter(entity -> entity instanceof Ball).forEach(ball -> {
+			if (((Ball) ball).isOver()) {
+				int option = JOptionPane.showConfirmDialog
+						(this, "Score is "+score+"\nPlay again ?" , "Game Over!", JOptionPane.OK_CANCEL_OPTION);
+				if (option == JOptionPane.CANCEL_OPTION)
+					System.exit(0);	
+				if (option == JOptionPane.CANCEL_OPTION)
+					System.exit(0);
+				else if (option == JOptionPane.OK_OPTION)
+					newGame();
+				score=0;
+			}
+		});
+		
+		//Win, loss
+		if(score == totalBriks) {
+		int option = JOptionPane.showConfirmDialog(this,
+				"Your Score is " + score + "\nPlay again?", "You Win!",
+				JOptionPane.OK_CANCEL_OPTION);
+		if (option == JOptionPane.CANCEL_OPTION)
+			System.exit(0);
+		else if (option == JOptionPane.OK_OPTION)
+			newGame();
+		score=0;
+		}		
 	}
 
 	/**
@@ -209,8 +235,6 @@ public class Game extends Canvas implements KeyListener{
 		
 		if(e.getKeyCode() ==39 ) {
 			this.isRight = false;
-		}
-		
+		}		
 	}
-
 }

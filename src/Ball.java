@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 
 public class Ball extends GameEntity implements Draw{		
 	
+	private int dx;
 	private int dy;
 	
 	public Ball(int gameW, int gameH, int startX, int startY, int w, int h, int speed) {
@@ -19,28 +20,26 @@ public class Ball extends GameEntity implements Draw{
 	}
 	
 	@Override
-	public void update() {		
+	public void update() {	
+		int m = Game.brickS;
 		x = x + dx;
 		y = y + dy;			
 		
-		if(x <=0 ) {
+		if(x <= m ) {
 			dx = +speed;
 		}
-		if(x + w >= gameW) {
+		if(x + w >= (gameW - m )) {
 			dx = -speed;
 		}
 		
-		if(y <=0 ) {
+		if(y <=m ) {
 			dy = +speed;
-		}
-		if(y + h >= gameH) {
-			dy = -speed;
-		}
+		}		
 	}		
 	
 	public void reverse()
 	{
-		dy = -speed;
+		dy = -dy;
 	}
 
 	@Override
@@ -54,5 +53,13 @@ public class Ball extends GameEntity implements Draw{
 			g.fillOval(getX(), getY(), getW(), getH());
 			e.printStackTrace();
 		}
+	}
+	
+	public boolean isOver() {
+		if(y > gameH) {
+			return true;
+		}
+		return false;
+		
 	}
 }

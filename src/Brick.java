@@ -31,7 +31,5 @@ public class Brick extends GameEntity implements Draw{
 			e.printStackTrace();
 		}
 		
-	}	
-		
-	
+	}		
 }

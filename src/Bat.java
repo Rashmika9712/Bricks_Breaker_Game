@@ -9,6 +9,8 @@ import javax.imageio.ImageIO;
 
 public class Bat extends GameEntity implements Draw{		
 
+	private int dx;
+	
 	public Bat(int gameW, int gameH,  int startX, int startY, int w, int h, int speed) {
 		super(gameW, gameH, startX, startY, w, h, speed);			
 	}
@@ -23,13 +25,14 @@ public class Bat extends GameEntity implements Draw{
 		
 	@Override
 	public void update() {
+		int m = Game.brickS;		
 		x = x + dx;
 		
-		if(x <= 0) {
-			x = 0 ;
+		if(x <= m) {
+			x = m ;
 		}
-		if(x >= gameW - w) {
-			x = gameW - w;
+		if(x >= gameW - (w + m)) {
+			x = gameW - (w + m);
 		}
 		dx = 0;
 	}
@@ -39,7 +42,7 @@ public class Bat extends GameEntity implements Draw{
 		// TODO Auto-generated method stub
 		try {
 			BufferedImage buffer = ImageIO.read(new File("./img/bat.png"));
-			g.drawImage(buffer, x, y, observer);
+			g.drawImage(buffer, x-5, y, observer);
 		} catch (IOException e) {
 			g.setColor(Color.WHITE);
 			g.fillRect(getX(), getY(), getW(), getH());

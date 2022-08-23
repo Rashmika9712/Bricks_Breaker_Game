@@ -9,9 +9,7 @@ public abstract class GameEntity {
 	protected int w;
 	protected int h;
 	protected int speed;
-	
-	protected int dx;
-	
+		
 	public GameEntity(int gameW, int gameH, int startX, int startY, int w, int h, int speed) {
 		this.gameW = gameW;
 		this.gameH = gameH;
